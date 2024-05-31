@@ -1,3 +1,4 @@
-Flask
+Flask==2.0.3
+flask-cors==3.0.10
 openai-whisper
-torch
+torch==1.9.0
