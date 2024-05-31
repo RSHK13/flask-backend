@@ -6,7 +6,7 @@ import whisper
 app = Flask(__name__)
 CORS(app)
 
-model = whisper.load_model('large')
+model = whisper.load_model('medium')
 
 @app.route('/process_audio', methods=['POST'])
 def process_audio():
