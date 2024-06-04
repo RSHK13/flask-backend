@@ -4,22 +4,44 @@ from flask_cors import CORS
 import whisper
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
-model = whisper.load_model('medium')
+model = whisper.load_model("medium")
 
-@app.route('/process_audio', methods=['POST'])
+
+@app.route("/process_audio", methods=["POST"])
 def process_audio():
-    if 'audio' not in request.files:
+    print("reached process_audio")
+    print(request.content_type)
+    data = request.form
+    # data["dsf"] = "123123"
+    print("data")
+    print(data)
+
+    if "audio" not in request.files:
         return jsonify({"error": "No audio file provided"}), 400
 
-    audio_file = request.files['audio']
-    audio_path = '/tmp/audio.wav'
+    audio_file = request.files["audio"]
+    audio_path = "/tmp/audio.wav"
     audio_file.save(audio_path)
 
-    result = model.transcribe(audio_path, task='translate')
-    return jsonify({"language": result['language'], "text": result['text']})
+    result = model.transcribe(audio_path, task="translate")
+    output = {"language": result["language"], "text": result["text"]}
+    print("OUTPUT", output)
+    return output
+
+
+@app.route("/")
+def hello():
+    return "Hello World!"
+
+
+@app.route("/hell", methods=["POST"])
+def hello_post():
+    print(request)
+    return "Hello World!"
+
 
 if __name__ == "__main__":
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    port = int(os.environ.get("PORT", 5001))
+    app.run(host="0.0.0.0", port=port, debug=True)
