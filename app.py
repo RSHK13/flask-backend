@@ -4,9 +4,9 @@ from flask_cors import CORS
 import whisper
 
 app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "*"}})
+CORS(app)
 
-model = whisper.load_model("medium")
+model = whisper.load_model("small")
 
 
 @app.route("/process_audio", methods=["POST"])
@@ -25,7 +25,7 @@ def process_audio():
     audio_path = "/tmp/audio.wav"
     audio_file.save(audio_path)
 
-    result = model.transcribe(audio_path, task="translate")
+    result = model.transcribe(audio_path)
     output = {"language": result["language"], "text": result["text"]}
     print("OUTPUT", output)
     return output
